@@ -14,17 +14,13 @@ defmodule BotPhone.Application do
     Supervisor.start_link(children(@target), opts)
   end
 
-  # List all child processes to be supervised
   def children("host") do
     [
       {BotPhone.Client, Application.fetch_env!(:bot_phone, :bot_config)}
     ]
   end
 
-  def children(_target) do
-    [
-      # Starts a worker by calling: BotPhone.Worker.start_link(arg)
-      # {BotPhone.Worker, arg},
-    ]
+  def children(_) do
+    [BotPhone.Dialer, BotPhone.Hook] ++ children("host")
   end
 end

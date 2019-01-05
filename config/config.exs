@@ -49,11 +49,20 @@ config :nerves_firmware_ssh,
 node_name = if Mix.env() != :prod, do: "bot_phone"
 
 config :nerves_init_gadget,
-  ifname: "usb0",
+  ifname: "eth0",
   address_method: :dhcpd,
   mdns_domain: "nerves.local",
   node_name: node_name,
   node_host: :mdns_domain
+
+key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
+
+config :nerves_network, :default,
+  wlan0: [
+    ssid: System.get_env("NERVES_NETWORK_SSID") || "Zebraatje",
+    psk: System.get_env("NERVES_NETWORK_PSK") || "welkom12",
+    key_mgmt: String.to_atom(key_mgmt)
+  ]
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

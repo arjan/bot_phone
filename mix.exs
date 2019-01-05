@@ -52,10 +52,12 @@ defmodule BotPhone.MixProject do
   defp deps(target) do
     [
       {:nerves_runtime, "~> 0.6"},
-      {:nerves_init_gadget, "~> 0.4"}
+      {:nerves_init_gadget, "~> 0.4"},
+      {:elixir_ale, "~> 1.2"}
     ] ++ system(target)
   end
 
+  defp system("custom_rpi3"), do: [{:custom_rpi3, path: "../custom_rpi3", runtime: false}]
   defp system("rpi"), do: [{:nerves_system_rpi, "~> 1.5", runtime: false}]
   defp system("rpi0"), do: [{:nerves_system_rpi0, "~> 1.5", runtime: false}]
   defp system("rpi2"), do: [{:nerves_system_rpi2, "~> 1.5", runtime: false}]
