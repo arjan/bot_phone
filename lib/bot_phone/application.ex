@@ -21,6 +21,6 @@ defmodule BotPhone.Application do
   end
 
   def children(_) do
-    [BotPhone.Dialer, BotPhone.Hook] ++ children("host")
+    [BotPhone.Audio, BotPhone.Dialer, BotPhone.Hook] ++ children("host")
   end
 end

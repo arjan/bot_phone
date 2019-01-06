@@ -2,6 +2,8 @@ defmodule BotPhone.Client do
   use GenServer
   require Logger
 
+  alias BotPhone.Audio
+
   def start_link(config) do
     GenServer.start_link(__MODULE__, config, name: __MODULE__)
   end
@@ -65,6 +67,10 @@ defmodule BotPhone.Client do
     {:reply, {:error, :not_connected}, state}
   end
 
+  def handle_call(:leave, _from, %{channel: nil} = state) do
+    {:reply, {:error, :not_joined}, state}
+  end
+
   def handle_call(:leave, _from, state) do
     {:ok, _} = PhoenixChannelClient.leave(state.channel)
     {:reply, :ok, %State{state | channel: nil}}
@@ -84,7 +90,17 @@ defmodule BotPhone.Client do
     {:noreply, state}
   end
 
-  def handle_info({push, _}, state) when is_binary(push) do
+  def handle_info({"emit", %{"event" => "mp3", "payload" => file}}, state) do
+    Logger.info("Play: #{file}")
+
+    Audio.play(file)
+    {:noreply, state}
+  end
+
+  def handle_info({push, payload}, state) when is_binary(push) do
+    Logger.info("→ push: #{push}")
+    Logger.info("        #{inspect(payload)}")
+
     {:noreply, state}
   end
 

@@ -47,7 +47,10 @@ defmodule BotPhone.MixProject do
   end
 
   # Specify target specific dependencies
-  defp deps("host"), do: []
+  defp deps("host"),
+    do: [
+      {:goth, "~> 0.11"}
+    ]
 
   defp deps(target) do
     [
