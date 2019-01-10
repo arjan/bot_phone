@@ -84,15 +84,16 @@ defmodule BotPhone.Client do
     {:noreply, try_connect(state)}
   end
 
-  def handle_info({"message", payload}, state) do
-    message = payload["payload"]["message"]
+  def handle_info({"message", %{"payload" => %{"kind" => "audio", "url" => url}}}, state) do
+    Logger.info("Play URL: #{url}")
+    Audio.play(url)
+    {:noreply, state}
+  end
+
+  def handle_info({"message", %{"payload" => %{"message" => message}}}, state) do
     {:ok, content} = GoogleTTS.synthesize(message)
-    IO.inspect(content, label: "content")
-
+    Logger.info("Play text: #{message}")
     Audio.play(content)
-
-    Logger.warn("Message: #{payload["payload"]["message"]}")
-
     {:noreply, state}
   end
 

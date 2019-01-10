@@ -25,9 +25,9 @@ defmodule BotPhone.Audio do
     {:noreply, state}
   end
 
-  defp resolve("/" <> _ = file) do
-    file
-  end
+  defp resolve("/" <> _ = file), do: file
+  defp resolve("http:" <> _ = file), do: file
+  defp resolve("https:" <> _ = file), do: file
 
   defp resolve(file) when is_binary(file) do
     "/mp3/#{file}.mp3"
