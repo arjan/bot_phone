@@ -28,7 +28,7 @@ defmodule BotPhone.Application do
   end
 
   def ntp_child() do
-    worker(
+    Supervisor.Spec.worker(
       SystemRegistry.Task,
       [[:state, :network_interface, "wlan0", :ipv4_address], &init_network/1]
     )
