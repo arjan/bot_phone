@@ -20,8 +20,21 @@ defmodule BotPhone.Audio do
   end
 
   def handle_cast({:play, file}, state) do
-    :os.cmd('mpg123 /mp3/#{file}.mp3')
+    :os.cmd('mpg123 #{resolve(file)}')
 
     {:noreply, state}
+  end
+
+  defp resolve("/" <> _ = file) do
+    file
+  end
+
+  defp resolve(file) when is_binary(file) do
+    "/mp3/#{file}.mp3"
+  end
+
+  defp resolve(%{"audioContent" => content}) do
+    File.write!("/tmp/audio.mp3", Base.decode64!(content))
+    "/tmp/audio.mp3"
   end
 end

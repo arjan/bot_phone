@@ -38,6 +38,7 @@ defmodule BotPhone.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:goth, "~> 0.11"},
       {:phoenixchannelclient, "~> 0.1.0"},
       {:nerves, "~> 1.3", runtime: false},
       {:shoehorn, "~> 0.4"},
@@ -48,13 +49,12 @@ defmodule BotPhone.MixProject do
 
   # Specify target specific dependencies
   defp deps("host"),
-    do: [
-      {:goth, "~> 0.11"}
-    ]
+    do: []
 
   defp deps(target) do
     [
       {:nerves_runtime, "~> 0.6"},
+      {:nerves_time, "~> 0.2"},
       {:nerves_init_gadget, "~> 0.4"},
       {:elixir_ale, "~> 1.2"}
     ] ++ system(target)

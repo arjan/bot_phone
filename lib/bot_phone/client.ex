@@ -2,7 +2,7 @@ defmodule BotPhone.Client do
   use GenServer
   require Logger
 
-  alias BotPhone.Audio
+  alias BotPhone.{GoogleTTS, Audio}
 
   def start_link(config) do
     GenServer.start_link(__MODULE__, config, name: __MODULE__)
@@ -85,6 +85,12 @@ defmodule BotPhone.Client do
   end
 
   def handle_info({"message", payload}, state) do
+    message = payload["payload"]["message"]
+    {:ok, content} = GoogleTTS.synthesize(message)
+    IO.inspect(content, label: "content")
+
+    Audio.play(content)
+
     Logger.warn("Message: #{payload["payload"]["message"]}")
 
     {:noreply, state}
