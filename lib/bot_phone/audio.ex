@@ -1,6 +1,7 @@
 defmodule BotPhone.Audio do
   use GenServer
   require Logger
+  alias BotPhone.UrlCache
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -26,8 +27,8 @@ defmodule BotPhone.Audio do
   end
 
   defp resolve("/" <> _ = file), do: file
-  defp resolve("http:" <> _ = file), do: file
-  defp resolve("https:" <> _ = file), do: file
+  defp resolve("http:" <> _ = url), do: UrlCache.url_to_file(url)
+  defp resolve("https:" <> _ = url), do: UrlCache.url_to_file(url)
 
   defp resolve(file) when is_binary(file) do
     "/mp3/#{file}.mp3"
